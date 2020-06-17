@@ -163,14 +163,16 @@ runtime
 ```
 ## Building RAagent
 
-Both 'agent' and 'startagent' need to be built and placed in the /bin folder. The *makeosx.sh*, *makewindows.sh*, *makelinux.sh* can be used, alternatively this can be done as below.
+Both 'agent' and 'startagent' need to be built and placed in the /bin folder. The *makeosx.sh*, *makewindows.sh*, *makelinux.sh* can be used, alternatively this can be done as below. 
+
+Note: For quiet background startup on Windows, both agent and startagent need building with *-ldflags -H=windowsgui*  (Be aware the agent process can then only be killed via the Windows task manager or using RAserver)
 ```
 # Linux
 #
 GOOS=linux GOARCH=amd64 go build -o ./runtime/bin/startagent  ./startagent/startagent.go
 GOOS=linux GOARCH=amd64 go build -o ./runtime/bin/agent  ./agent/agent.go
 
-#Windows (startagent might need to be built with -ldflags -H=windowsgui)
+#Windows (Quiet start requires building both agent and startagent with -ldflags -H=windowsgui)
 #
 GOOS=windows GOARCH=amd64 go build -o ./runtime/bin/startagent.exe  ./startagent/startagent.go
 GOOS=windows GOARCH=amd64 go build -o ./runtime/bin/agent.exe  ./agent/agent.go
