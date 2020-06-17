@@ -29,7 +29,7 @@ func main() {
 
 		// Start with fresh log file if log file is bigger than 500k
 		fs, err := os.Stat(logPath)
-		if err != nil {
+		if err == nil {
 			if fs.Size() > logMaxSize {
 				_ = os.Remove(logPath)
 			}
