@@ -1,0 +1,3 @@
+echo example.pc says hello back to you
+echo Passed arguments:
+echo $@

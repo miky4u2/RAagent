@@ -1,0 +1,13 @@
+{
+    "serverIP": ["127.0.0.1","::1"],
+    "serverURL": "https://localhost:8081",
+    "validateServerTLS": false,
+    "agentID": "example.pc",
+    "agentBindPort": "8080",
+    "agentBindIP": "",
+    "allowedIPs": ["127.0.0.1","::1"],
+    "logFile":"",
+    "logToFile": true,
+    "validateNotifyTLS": false,
+    "taskHistoryKeepDays": 7
+}

@@ -1,0 +1,13 @@
+# Ignored files
+runtime/tasks/*
+runtime/temp/*
+runtime/log/*
+runtime/bin/*
+runw
+runosx
+runlinux
+
+# Never ignore git files
+!.gitignore
+!.gitkeep
+!.gitattributes
