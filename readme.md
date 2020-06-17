@@ -172,12 +172,12 @@ Note: For quiet background startup on Windows, both agent and startagent need bu
 GOOS=linux GOARCH=amd64 go build -o ./runtime/bin/startagent  ./startagent/startagent.go
 GOOS=linux GOARCH=amd64 go build -o ./runtime/bin/agent  ./agent/agent.go
 
-#Windows (Quiet start requires building both agent and startagent with -ldflags -H=windowsgui)
+# Windows (Quiet start requires building both agent and startagent with -ldflags -H=windowsgui)
 #
 GOOS=windows GOARCH=amd64 go build -o ./runtime/bin/startagent.exe  ./startagent/startagent.go
 GOOS=windows GOARCH=amd64 go build -o ./runtime/bin/agent.exe  ./agent/agent.go
 
-#OSX (not tested)
+# OSX (not tested)
 #
 GOOS=darwin GOARCH=amd64 go build -o ./runtime/bin/startagent  ./startagent/startagent.go
 GOOS=darwin GOARCH=amd64 go build -o ./runtime/bin/agent  ./agent/agent.go
