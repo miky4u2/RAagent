@@ -129,7 +129,7 @@ Response (possible returned task *status* : *in progress*, *done*, *failed*), *o
 ```
 # Runtime deployment file layout
 ```
-agent
+runtime
     |
     +--bin
     |    |
