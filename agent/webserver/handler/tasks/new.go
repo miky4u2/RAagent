@@ -168,10 +168,7 @@ func taskExec(response *taskRes, modulePath string, startTime time.Time, taskHis
 		log.Println(err)
 	}
 
-	commandBits := []string{`bash`, modulePath}
-	commandBits = append(commandBits, response.Args...)
-
-	cmd := exec.Command(commandBits[0], commandBits[1:]...)
+	cmd := exec.Command(modulePath, response.Args[0:]...)
 
 	output := bytes.Buffer{}
 	cmd.Stderr = &output

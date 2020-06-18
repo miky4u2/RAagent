@@ -5,14 +5,14 @@
 RAagent is one of two related small and simple tools, particularly useful for system administration of multiple servers and remote task automation. Those tools are the result of my first project in GO so the code design might not be the best but they do what they were designed to do just fine :-).  
 Running services allowing remote program execution can represent a high security risk when not properly firewalled, make sure to setup appropriate firewall rules prior to deployment or do not use at all if you don't know what you are doing.
 
-RAagent can be used standalone, in which case the **'modules'** can just be added manually and **'tasks'** can be executed by sending simple HTTPS POST requests from scripts or admin panels. If multiple agents are used, RAserver can act as the **'modules and binaries repository'** for the agents, making modules deployment and agents update easier. I have done my best to design those tools to run on Linux/Osx/Windows but only used them on production on Linux systems. The RAagent requires 'bash' to be installed on Windows to execute the commands/modules. 
+RAagent can be used standalone, in which case the **'modules'** can just be added manually and **'tasks'** can be executed by sending simple HTTPS POST requests from scripts or admin panels. If multiple agents are used, RAserver can act as the **'modules and binaries repository'** for the agents, making bulk modules deployment and agents update easier. I have done my best to design those tools to run on Linux/Osx/Windows but only used them on production on Linux systems. The RAagent requires 'bash' to be installed on Windows to execute the commands/modules. 
 
 Check out the [RAserver repository](https://github.com/miky4u2/RAserver) for the related RAserver code and info.
 
 ## Description
 - RAagent is a Secure REST API service designed to accept **'tasks'**, requests from allowed origins and execute external **'modules'** on the machine it is running on (Windows/Linux/OSX). This can be useful for example to remotely restart services on servers, add users, trigger updates, download repositories, modify system files, manage dockers etc... The list of commands which can be executed is limited by the 'modules' you install on the agent.
 
-- A **'module'** can be any executable, binary or script written in any language as long as it can be executed with **'bash'** and optionally accept arguments, some of which might need to be base64 encoded. 
+- A **'module'** can be any executable, binary or script written in any language as long as it can be executed and optionally accept arguments, some of which might need to be base64 encoded. 
 
 - A **'task'** is the Json request for the execution of a specific module with provided arguments. A task can be executed in *attached* or *detached* mode (see below).
 The API endpoint to create a task is `/tasks/new`
@@ -27,20 +27,32 @@ The API endpoint to check the progress of a *detached* task is `/tasks/status`
 - Both modes accept an optional *notifyURL* parameter which is called when the task is completed. The notifyURL must be of type https:// and is instantly called when a new task is submitted in *attached* mode and deferred in *detached* mode. 
 
 ## Request Examples
-New Task in *Detached* mode to `/tasks/new` (Method POST)
+New Task to `/tasks/new` (Method POST)
 Request:
 ```json
+# Windows agent task example in detached mode
+{
+    "name": "Start Notepad",
+    "mode": "detached",
+    "notifyURL": "https://www.optional_notify_server.com/api/taskresponse",
+    "module": "start_notepad.bat",
+    "args": ""
+}
+```
+
+```json
+# Linux agent task example in attached mode
 {
     "name": "Restart Crond",
-    "mode": "detached",
-    "notifyURL": "https://www.blah.com/api/taskresponse",
-    "module": "service_restart.sh",
+    "mode": "attached",
+    "notifyURL": "",
+    "module": "restart_services",
     "args": [
         "crond"
     ]
 }
 ```
-Response:
+Response example:
 ```json
 {
     "UUID": "8db6408d-c4e9-4144-92aa-46d1201a88d0",
@@ -51,13 +63,11 @@ Response:
     "duration": "",
     "output": "",
     "endPoint": "/tasks/new",
-    "name": "Restart Crond",
+    "name": "Start Notepad",
     "mode": "detached",
-    "notifyURL": "https://www.notifydomain.com/api/taskresponse",
-    "module": "service_restart.sh",
-    "args": [
-        "crond"
-    ]
+    "notifyURL": "https://www.optional_notify_server.com/api/taskresponse",
+    "module": "start_notepad.bat",
+    "args": ""
 }
 ```
 Task Status to `/tasks/status` (Method POST)
@@ -77,17 +87,15 @@ Response (possible returned task *status* : *in progress*, *done*, *failed*), *o
         "status": "done",
         "errorMsgs": null,
         "startTime": "2020-05-28 23:11:36",
-        "endTime": "2020-05-28 23:11:37",
-        "duration": "93.0322ms",
+        "endTime": "2020-05-28 23:21:36",
+        "duration": "10s",
         "output": "cnVudGltZS9tb2R1bGVzL3NlcnZpY2VfcmVzdGFydC5zeXN0ZW1jdGw6IGNvbW1hbmQgbm90IGZvdW5kCg==",
         "endPoint": "/tasks/new",
-        "name": "Restart Crond",
+        "name": "Start Notepad",
         "mode": "detached",
-        "notifyURL": "https://www.notifydomain.com/api/taskresponse",
-        "module": "service_restart.sh",
-        "args": [
-            "crond"
-        ]
+        "notifyURL": "https://www.optional_notify_server.com/api/taskresponse",
+        "module": "start_notepad.bat",
+        "args": ""
     }
 }
 ```
@@ -150,7 +158,7 @@ runtime
     |
     +--modules
     |        |
-    |        +--service_restart.sh (possible linux service restart script)
+    |        +--restart_services (possible linux service restart script)
     |        +--hello.bat (possible windows module)
     |        +--some_module.exe (possible windows module)
     |        +--etc..
