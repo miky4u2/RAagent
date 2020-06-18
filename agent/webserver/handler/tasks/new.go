@@ -11,10 +11,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -155,6 +157,8 @@ func New(w http.ResponseWriter, req *http.Request) {
 //
 func taskExec(response *taskRes, modulePath string, startTime time.Time, taskHistoryKeepDays int, validateNotifyTLS bool) {
 
+	cmdArgs := response.Args
+
 	var errMsgs []string
 
 	// Create a new uuid.status file for this task
@@ -168,7 +172,33 @@ func taskExec(response *taskRes, modulePath string, startTime time.Time, taskHis
 		log.Println(err)
 	}
 
-	cmd := exec.Command(modulePath, response.Args[0:]...)
+	// If module path has extension .json, parse the file to obtain command and arguments
+	if strings.HasSuffix(modulePath, `.cmd`) {
+
+		// Struct to hold json content of cmd file
+		var cmdContent = struct {
+			Cmd  string   `json:"cmd"`
+			Args []string `json:"args"`
+		}{}
+
+		cmdFile, err := os.Open(modulePath)
+		defer cmdFile.Close()
+		if err != nil {
+			log.Println(err)
+		}
+
+		jasonParser := json.NewDecoder(cmdFile)
+		err = jasonParser.Decode(&cmdContent)
+		if err != nil {
+			log.Println(err)
+		}
+
+		// Overriding commande and arguments received with those in the .cmd file
+		modulePath = cmdContent.Cmd
+		cmdArgs = cmdContent.Args
+	}
+
+	cmd := exec.Command(modulePath, cmdArgs[0:]...)
 
 	output := bytes.Buffer{}
 	cmd.Stderr = &output

@@ -12,7 +12,7 @@ Check out the [RAserver repository](https://github.com/miky4u2/RAserver) for the
 ## Description
 - RAagent is a Secure REST API service designed to accept **'tasks'**, requests from allowed origins and execute external **'modules'** on the machine it is running on (Windows/Linux/OSX). This can be useful for example to remotely restart services on servers, add users, trigger updates, download repositories, modify system files, manage dockers etc... The list of commands which can be executed is limited by the 'modules' you install on the agent.
 
-- A **'module'** can be any executable, binary or script written in any language as long as it can be executed and optionally accept arguments, some of which might need to be base64 encoded. 
+- A **'module'** can be any executable, binary or script written in any language as long as it can be executed and optionally accept arguments, some of which might need to be base64 encoded. For special cases with Windows where the execution of an executable pops up a cmd.exe windows, a special module with extension .cmd can be used. (see .cmd special module below)
 
 - A **'task'** is the Json request for the execution of a specific module with provided arguments. A task can be executed in *attached* or *detached* mode (see below).
 The API endpoint to create a task is `/tasks/new`
@@ -35,7 +35,7 @@ Request:
     "name": "Start Notepad",
     "mode": "detached",
     "notifyURL": "https://www.optional_notify_server.com/api/taskresponse",
-    "module": "start_notepad.bat",
+    "module": "start_notepad.cmd",
     "args": ""
 }
 ```
@@ -66,7 +66,7 @@ Response example:
     "name": "Start Notepad",
     "mode": "detached",
     "notifyURL": "https://www.optional_notify_server.com/api/taskresponse",
-    "module": "start_notepad.bat",
+    "module": "start_notepad.cmd",
     "args": ""
 }
 ```
@@ -94,11 +94,23 @@ Response (possible returned task *status* : *in progress*, *done*, *failed*), *o
         "name": "Start Notepad",
         "mode": "detached",
         "notifyURL": "https://www.optional_notify_server.com/api/taskresponse",
-        "module": "start_notepad.bat",
+        "module": "start_notepad.cmd",
         "args": ""
     }
 }
 ```
+## .cmd special module 
+While testing with Windows it appeared executing a Windows application via a .bat file opens up a cmd.exe window as well which might be a problem in some cases. To avoid this, a module with extension .cmd can be used. The file must contain a command and optional arguments in json format. The example below would execute 'notepad' or 'notepad.exe' directly. The *cmd* and *args* in the file override the *module* and *args* from the `/tasks/new` request. In the other words the command provided in the module is executed instead of the module itself.
+
+```json
+{
+    "cmd": "notepad",
+     "args":  [
+        "somefile.txt"
+    ]
+}
+```
+
 ## RAserver reserved api calls
 - `/agent/update` 
     1. The server sends the agent an update request of type *full* or *modules*.
@@ -159,8 +171,9 @@ runtime
     +--modules
     |        |
     |        +--restart_services (possible linux service restart script)
-    |        +--hello.bat (possible windows module)
-    |        +--some_module.exe (possible windows module)
+    |        +--hello.bat (possible Windows module)
+    |        +--some_module.exe (possible Windows module)
+    |        +--start_chrome.cmd (possible special .cmd module)
     |        +--etc..
     |
     +--tasks (Required folder to keep the task status history)
