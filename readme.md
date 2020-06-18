@@ -5,7 +5,7 @@
 RAagent is one of two related small and simple tools, particularly useful for system administration of multiple servers and remote task automation. Those tools are the result of my first project in GO so the code design might not be the best but they do what they were designed to do just fine :-).  
 Running services allowing remote program execution can represent a high security risk when not properly firewalled, make sure to setup appropriate firewall rules prior to deployment or do not use at all if you don't know what you are doing.
 
-RAagent can be used standalone, in which case the **'modules'** can just be added manually and **'tasks'** can be executed by sending simple HTTPS POST requests from scripts or admin panels. If multiple agents are used, RAserver can act as the **'modules and binaries repository'** for the agents, making bulk modules deployment and agents update easier. I have done my best to design those tools to run on Linux/Osx/Windows but only used them on production on Linux systems. The RAagent requires 'bash' to be installed on Windows to execute the commands/modules. 
+RAagent can be used standalone, in which case the **'modules'** can just be added manually and **'tasks'** can be executed by sending simple HTTPS POST requests from scripts or admin panels. If multiple agents are used, RAserver can act as the **'modules and binaries repository'** for the agents, making bulk modules deployment and agents update easier. I have done my best to design those tools to run on Linux/Osx/Windows but only used them on production on Linux systems. 
 
 Check out the [RAserver repository](https://github.com/miky4u2/RAserver) for the related RAserver code and info.
 
