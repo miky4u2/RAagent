@@ -100,7 +100,7 @@ Response (possible returned task *status* : *in progress*, *done*, *failed*), *o
 }
 ```
 ## .cmd special module 
-While testing with Windows it appeared executing a Windows application via a .bat file opens up a cmd.exe window as well which might be a problem in some cases. To avoid this, a module with extension .cmd can be used. The file must contain a command and optional arguments in json format. The example below would execute 'notepad' or 'notepad.exe' directly. The *cmd* and *args* in the file override the *module* and *args* from the `/tasks/new` request. In the other words the command provided in the module is executed instead of the module itself.
+While testing with Windows it appeared executing a Windows application via a .bat file opens up a cmd.exe window as well which might be a problem in some cases. To avoid this, a module with extension .cmd can be used. The file must contain a command and optional arguments in json format. The example below would execute 'notepad' or 'notepad.exe' directly. The *cmd* and *args* in the file override the *module* and *args* from the `/tasks/new` request. In other words the command provided in the module is executed instead of the module itself.
 
 ```json
 {
