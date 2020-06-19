@@ -40,7 +40,13 @@ func main() {
 		_ = os.Remove(filepath.Join(appBasePath, `agent_restart`))
 
 		// Try to start the agent
-		fork(processStateListener, filepath.Join(appBasePath, `agent.exe`))
+		if fileExists(filepath.Join(appBasePath, `agent.exe`)) {
+			fork(processStateListener, filepath.Join(appBasePath, `agent.exe`))
+		} else if fileExists(filepath.Join(appBasePath, `agent`)) {
+			fork(processStateListener, filepath.Join(appBasePath, `agent`))
+		} else {
+			log.Fatalln("Cannot find agent binary.")
+		}
 
 		// waiting for monitor unblocking response when the agent exits gracefully
 		_ = <-processStateListener.monitor
