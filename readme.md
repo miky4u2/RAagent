@@ -1,6 +1,6 @@
 # Remote Admin Agent
 
-**RAagent is functioning but not fully tested on all platforms. Possibly still some bugs to iron out or some fine tuning to do but feel free to try it, use it, expand on it...**
+**RAagent is functioning but not tested on Osx at all. It might still contain some bugs I haven't come across yet but feel free to try it, use it, expand on it...**
 
 RAagent is one of two related small and simple tools, particularly useful for system administration of multiple servers and remote task automation. Those tools are the result of my first project in GO so the code design might not be the best but they do what they were designed to do just fine :-).  
 Running services allowing remote program execution can represent a high security risk when not properly firewalled, make sure to setup appropriate firewall rules prior to deployment or do not use at all if you don't know what you are doing.
