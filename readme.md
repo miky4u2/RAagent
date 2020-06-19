@@ -217,7 +217,7 @@ Description = RAagent
 After = network.target
 
 [Service]
-Type=forking
+Type=
 ExecStart = /path/to/RAagent/bin/startagent
 
 [Install]
