@@ -30,7 +30,7 @@ type config struct {
 }
 
 // Version of RAagent
-const Version = `1.0.0`
+const Version = `0.1.0`
 
 // AppBasePath is the base path of our application
 var AppBasePath string
