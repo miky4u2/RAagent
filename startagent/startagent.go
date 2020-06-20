@@ -9,7 +9,7 @@ import (
 )
 
 // Version of start_agent
-const version = `1.0.0`
+const version = `0.1.0`
 
 // AppBasePath is the base path of our application
 var appBasePath string
