@@ -1,3 +1,8 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/miky4u2/RAagent)](https://goreportcard.com/report/github.com/miky4u2/RAagent)
+![license](https://img.shields.io/github/license/miky4u2/RAagent.svg)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/miky4u2/RAagent)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/miky4u2/RAagent)](https://github.com/miky4u2/RAagent/releases/tag/v0.1.0)
+
 # Remote Admin Agent
 
 **RAagent is functioning but not tested on Osx at all. It might still contain some bugs I haven't come across yet but feel free to try it, use it, expand on it...**

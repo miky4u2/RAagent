@@ -127,6 +127,10 @@ func downloadUpdateFile(serverURL string, agentID string, destPath string, valid
 	downloadReqString := `{"agentID":"` + agentID + `","archive":"update"}`
 
 	downloadReq, err := http.NewRequest("POST", url, strings.NewReader(downloadReqString))
+	if err != nil {
+		return err
+	}
+	
 	downloadReq.Header.Set("Content-Type", "application/json")
 
 	// Do we validate the server TLS certificate? true/false
