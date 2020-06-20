@@ -10,6 +10,7 @@ import (
 	"github.com/satori/go.uuid"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -125,7 +126,15 @@ func New(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// If 'mode' is 'attached', execute module now and send response
+	// Log module execution attempt
+	userIP := "unknown"
+	remoteAddress, _, err := net.SplitHostPort(req.RemoteAddr)
+	if err == nil {
+		userIP = net.ParseIP(remoteAddress).String()
+	}
+	log.Println(`Executing module`, response.Module, `in`, task.Mode, `mode for IP`, userIP)
+
+	// Execute module now and send response
 	if task.Mode == "attached" {
 		taskExec(&response, modulePath, startTime, config.Settings.TaskHistoryKeepDays, config.Settings.ValidateNotifyTLS)
 
@@ -137,7 +146,7 @@ func New(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// If 'mode' is 'detached', instantiate a Go routine for this task's execution and
+	// Instantiate a Go routine for this task's execution and
 	// send 'in progress' response. The task status can then be monitored via api call to /tasks/status
 	if task.Mode == "detached" {
 		go taskExec(&response, modulePath, startTime, config.Settings.TaskHistoryKeepDays, config.Settings.ValidateNotifyTLS)
@@ -172,7 +181,7 @@ func taskExec(response *taskRes, modulePath string, startTime time.Time, taskHis
 		log.Println(err)
 	}
 
-	// If module path has extension .json, parse the file to obtain command and arguments
+	// For .cmd special modules, parse module file to obtain command and arguments
 	if strings.HasSuffix(modulePath, `.cmd`) {
 
 		// Struct to hold json content of cmd file
@@ -270,7 +279,7 @@ func notifyURL(response *taskRes, validateNotifyTLS bool) {
 	}
 	defer notifyRes.Body.Close()
 
-	// Check that we receive a status code 200
+	// Check that we received a status code 200
 	if notifyRes.StatusCode != http.StatusOK {
 		log.Println(`Failed sending notification to `+url+` : received status code`, strconv.Itoa(notifyRes.StatusCode))
 	}

@@ -113,7 +113,7 @@ func Update(w http.ResponseWriter, req *http.Request) {
 	// if full update was requested, exit now and hope for the best. The startagent should take over
 	// by updating the binary with the update's binary and restart
 	if updateReq.Type == `full` {
-		log.Println(`RAagent will now attempt to restart to finish its executable update...`)
+		log.Println(`Restarting to finish executable update...`)
 		go func() { time.Sleep(1 * time.Second); os.Exit(0) }()
 	}
 
