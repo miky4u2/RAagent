@@ -130,7 +130,7 @@ func downloadUpdateFile(serverURL string, agentID string, destPath string, valid
 	if err != nil {
 		return err
 	}
-	
+
 	downloadReq.Header.Set("Content-Type", "application/json")
 
 	// Do we validate the server TLS certificate? true/false
