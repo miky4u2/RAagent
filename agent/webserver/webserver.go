@@ -9,9 +9,14 @@ import (
 	"path/filepath"
 )
 
+var limiter *rate.Limiter
+
 // Start HTTP Server
 //
 func Start() error {
+
+	// Create a new Middleware rate limiter
+	limiter = rate.NewLimiter(rate.Limit(config.Settings.RateLimit), config.Settings.RateLimitBurst)
 
 	// Set routing
 	mux := http.NewServeMux()
@@ -32,14 +37,10 @@ func Start() error {
 	return err
 }
 
-// Middleware rate limiter 1 request per second with burst of 5
-//
-var limiter = rate.NewLimiter(1, 5)
-
 func limit(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if limiter.Allow() == false {
-			http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
+		if !limiter.Allow() {
+			http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
 			return
 		}
 

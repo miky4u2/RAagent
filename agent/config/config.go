@@ -23,6 +23,8 @@ type config struct {
 	AgentBindIP         string   `json:"agentBindIP"`
 	AgentBindPort       string   `json:"agentBindPort"`
 	AllowedIPs          []string `json:"allowedIPs"`
+	RateLimit           int      `json:"rateLimit"`
+	RateLimitBurst      int      `json:"rateLimitBurst"`
 	LogFile             string   `json:"logFile"`
 	LogToFile           bool     `json:"logToFile"`
 	ValidateNotifyTLS   bool     `json:"validateNotifyTLS"`
@@ -30,7 +32,7 @@ type config struct {
 }
 
 // Version of RAagent
-const Version = `0.1.0`
+const Version = `0.1.1`
 
 // AppBasePath is the base path of our application
 var AppBasePath string
@@ -47,11 +49,12 @@ func (c *config) Load() error {
 	filename := filepath.Join(AppBasePath, "conf", "config.json")
 
 	configFile, err := os.Open(filename)
-	defer configFile.Close()
 
 	if err != nil {
 		return err
 	}
+
+	defer configFile.Close()
 
 	jasonParser := json.NewDecoder(configFile)
 	err = jasonParser.Decode(c)
@@ -68,6 +71,12 @@ func (c *config) Load() error {
 
 	if c.TaskHistoryKeepDays < 1 {
 		c.TaskHistoryKeepDays = 7
+	}
+	if c.RateLimit < 1 {
+		c.RateLimit = 1
+	}
+	if c.RateLimitBurst < c.RateLimit {
+		c.RateLimitBurst = c.RateLimit
 	}
 
 	return err

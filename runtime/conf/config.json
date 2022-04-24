@@ -5,6 +5,8 @@
     "agentID": "example.pc",
     "agentBindPort": "8080",
     "agentBindIP": "",
+    "rateLimit": 50,
+    "rateLimitBurst": 100,
     "allowedIPs": ["127.0.0.1","::1"],
     "logFile":"",
     "logToFile": true,
